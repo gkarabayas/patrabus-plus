@@ -100,3 +100,7 @@ html,body{background:#171c20;min-height:100dvh}
 
 @media(max-width:800px){.app:not(.map-full):not(.map-collapsed) .map-wrap{height:calc(35dvh + var(--sheet-drag,0px))}}
 
+
+.scheduled-arrivals{margin-top:15px}.scheduled-arrivals-heading{display:flex;align-items:center;gap:7px;color:#b5c8db;font-size:12px;padding:8px 0}.scheduled-arrivals>p{color:#9bacbc;font-size:12px;line-height:1.5}.scheduled-card{cursor:default}.scheduled-card .route-name small{color:#9fb2c4}.scheduled-arrivals-note{font-size:11px!important;color:#8fa3b5!important;margin:10px 0 0}.scheduled-card .eta{font-size:27px}
+
+.scheduled-compact{display:flex;align-items:center;gap:8px;font-size:12px;color:#aec3d6;padding:12px 0 4px}.scheduled-compact>svg{flex-shrink:0}.scheduled-compact>span{flex:1;line-height:1.4}.scheduled-compact>strong{font-size:24px;color:#eef5fc;white-space:nowrap}
