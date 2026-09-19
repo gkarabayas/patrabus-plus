@@ -1,0 +1,6 @@
+.next/
+.vinext/
+.wrangler/
+dist/
+dev-server*.log
+.env*
