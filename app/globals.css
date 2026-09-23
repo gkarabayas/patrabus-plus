@@ -105,3 +105,31 @@ html,body{background:#171c20;min-height:100dvh}
 .scheduled-arrivals{margin-top:15px}.scheduled-arrivals-heading{display:flex;align-items:center;gap:7px;color:#b5c8db;font-size:12px;padding:8px 0}.scheduled-arrivals>p{color:#9bacbc;font-size:12px;line-height:1.5}.scheduled-card{cursor:default}.scheduled-card .route-name small{color:#9fb2c4}.scheduled-arrivals-note{font-size:11px!important;color:#8fa3b5!important;margin:10px 0 0}.scheduled-card .eta{font-size:27px}
 
 .scheduled-compact{display:flex;align-items:center;gap:8px;font-size:12px;color:#aec3d6;padding:12px 0 4px}.scheduled-compact>svg{flex-shrink:0}.scheduled-compact>span{flex:1;line-height:1.4}.scheduled-compact>strong{font-size:24px;color:#eef5fc;white-space:nowrap}
+
+/* Keep vehicle selection calm and bring arrivals into the first mobile viewport. */
+.vehicle-marker.tracked .bus-gps:before{display:none}
+.route-arrows-visible .route-arrow{display:none}
+@media(max-width:800px){
+  .app:not(.map-full):not(.map-collapsed) .map-wrap{height:calc(29dvh + var(--sheet-drag,0px));min-height:210px}
+  .search-area{padding-top:12px;padding-bottom:14px}
+  .stop-label-actions{margin-top:10px}
+  .arrivals{padding-top:13px}
+  .arrival-title{margin-top:0;margin-bottom:8px}
+}
+
+.arrival-kicker{display:block;margin-bottom:3px;color:#79cfaa;font-size:10px;font-weight:800;letter-spacing:1.05px;line-height:1}
+@media(max-width:800px){
+  .panel-tabs{margin:10px 16px 0;padding:3px;border-radius:11px}
+  .panel-tabs>button{min-height:38px;font-size:13px}
+  .search-area{padding-left:16px;padding-right:16px}
+  .filters [data-slot=select-trigger]{height:44px}
+  .direction{height:42px!important;margin-top:6px}
+  .stop-picker-trigger{min-height:60px;padding:10px}
+  .stop-trigger-icon{width:36px;height:36px;border-radius:10px}
+  .stop-picker-trigger small{font-size:11px;margin-bottom:2px}
+  .stop-picker-trigger strong{font-size:14px}
+  .arrivals{padding:12px 16px 18px}
+  .arrival-title h3{font-size:18px;letter-spacing:-.25px}
+  .arrival-card{padding:13px 8px;margin:2px 0}
+  .line-badge{width:40px;height:40px;font-size:16px}
+}
