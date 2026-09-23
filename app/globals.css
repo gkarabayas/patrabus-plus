@@ -118,6 +118,7 @@ html,body{background:#171c20;min-height:100dvh}
 }
 
 .arrival-kicker{display:block;margin-bottom:3px;color:#79cfaa;font-size:10px;font-weight:800;letter-spacing:1.05px;line-height:1}
+.seo-intro{margin-top:auto;padding:18px 24px calc(18px + env(safe-area-inset-bottom));border-top:1px solid #2d3941;background:#151a1e;color:#9eafbc}.seo-intro h2{margin:0 0 7px;color:#d9e6ed;font-size:14px;line-height:1.35;font-weight:700}.seo-intro p{margin:0;font-size:12px;line-height:1.65}
 @media(max-width:800px){
   .panel-tabs{margin:10px 16px 0;padding:3px;border-radius:11px}
   .panel-tabs>button{min-height:38px;font-size:13px}
@@ -132,4 +133,5 @@ html,body{background:#171c20;min-height:100dvh}
   .arrival-title h3{font-size:18px;letter-spacing:-.25px}
   .arrival-card{padding:13px 8px;margin:2px 0}
   .line-badge{width:40px;height:40px;font-size:16px}
+  .seo-intro{padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
 }
