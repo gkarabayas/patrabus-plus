@@ -15,6 +15,8 @@ The original tracking site provides useful bus data, but the experience was frus
 ## What changed
 
 - **A clearer mobile flow.** Pick a line, direction, and stop; save frequent stops as favorites; expand the map or collapse it to focus on arrivals.
+- **Every arrival at your stop.** Line and direction select which stops to browse. Once a stop is selected, live arrivals and the schedule fallback include all lines serving that stop.
+- **Saved bus card.** Save your card ID in this browser and see the total remaining rides in the top bar. The total includes every ride product, regardless of activation status. Open the card for its product balances, refresh, change, or removal; the balance also refreshes every minute while the app is visible.
 - **More responsive live tracking.** The selected stop refreshes every five seconds. Bus markers move smoothly along the published route between GPS samples instead of jumping across the map. The movement is visual interpolation, not a claim of new GPS data.
 - **Arrival context.** Live ETAs, route colors, a bus-to-stop path, and the remaining stops appear together. When CityBus provides an ETA for the same vehicle at an earlier stop, that estimate appears in the vertical approach list.
 - **A useful fallback.** When live arrivals are unavailable, the app can show stop-specific published times for trips in the next 45 minutes. The full timetable has a date picker and line filter. Scheduled times are labeled separately from live data.
@@ -43,6 +45,8 @@ npm run build         # Vinext build used by the original local/Sites setup
 ```
 
 The Vercel deployment uses the configuration in [`vercel.json`](vercel.json). The server route needs outbound access to `patra.citybus.gr` and `rest.citybus.gr`.
+
+Card lookups use a server-side `POST /api/card` proxy to `patra.buscard.gr`. The card ID is stored locally like favorite stops; card responses are not cached on the server. Time-based passes retain the provider's units and are not added to the ride total. Run the balance parser checks with `node --experimental-strip-types lib/card-balance.test.mjs`.
 
 ## Data and attribution
 
