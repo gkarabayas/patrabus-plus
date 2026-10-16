@@ -243,7 +243,7 @@ export function SavedCard() {
           ref={screen}
           fullscreen
           className="stops-screen card-screen"
-          overlayClassName="card-screen-backdrop"
+          overlayClassName="card-screen-backdrop supports-backdrop-filter:backdrop-blur-none"
           showCloseButton={false}
           initialFocus={false}
         >
