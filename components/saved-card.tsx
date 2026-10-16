@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   ArrowUpRight,
+  ClipboardPaste,
   CreditCard,
   Pencil,
   RefreshCw,
@@ -35,7 +36,81 @@ export function SavedCard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [storageError, setStorageError] = useState('');
+  const [pasteMessage, setPasteMessage] = useState('');
   const request = useRef<AbortController | null>(null);
+  const screen = useRef<HTMLDivElement>(null);
+  const body = useRef<HTMLDivElement>(null);
+  const field = useRef<HTMLDivElement>(null);
+  const cardInput = useRef<HTMLInputElement>(null);
+
+  function revealField() {
+    const scroller = body.current;
+    const row = field.current;
+    if (!scroller || !row || document.activeElement !== cardInput.current)
+      return;
+    const visible = scroller.getBoundingClientRect();
+    const bounds = row.getBoundingClientRect();
+    if (bounds.bottom > visible.bottom - 20) {
+      scroller.scrollTop += bounds.bottom - visible.bottom + 20;
+    } else if (bounds.top < visible.top + 20) {
+      scroller.scrollTop -= visible.top + 20 - bounds.top;
+    }
+  }
+
+  useEffect(() => {
+    if (!open) return;
+    const viewport = window.visualViewport;
+    let frame = 0;
+    const syncViewport = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        // Safari pans the visual viewport as well as shrinking it for the keyboard.
+        screen.current?.style.setProperty(
+          '--card-viewport-top',
+          `${viewport?.offsetTop ?? 0}px`,
+        );
+        screen.current?.style.setProperty(
+          '--card-viewport-height',
+          `${viewport?.height ?? window.innerHeight}px`,
+        );
+        revealField();
+      });
+    };
+    syncViewport();
+    viewport?.addEventListener('resize', syncViewport);
+    viewport?.addEventListener('scroll', syncViewport);
+    window.addEventListener('resize', syncViewport);
+    return () => {
+      cancelAnimationFrame(frame);
+      viewport?.removeEventListener('resize', syncViewport);
+      viewport?.removeEventListener('scroll', syncViewport);
+      window.removeEventListener('resize', syncViewport);
+    };
+  }, [open]);
+
+  async function pasteCardId() {
+    // Invoke clipboard access directly from the tap for Safari's user activation.
+    try {
+      const text = await navigator.clipboard.readText();
+      const id = normalizeCardId(text);
+      if (!validCardId(id)) {
+        setPasteMessage(
+          'Αντέγραψε τον κωδικό CB με τα 15 ψηφία και πάτησε ξανά επικόλληση.',
+        );
+        return;
+      }
+      setInput(id);
+      setError('');
+      setPasteMessage('Ο κωδικός επικολλήθηκε.');
+    } catch {
+      setPasteMessage(
+        'Πάτησε παρατεταμένα στο πεδίο και επίλεξε «Επικόλληση».',
+      );
+    } finally {
+      cardInput.current?.focus({ preventScroll: true });
+      requestAnimationFrame(revealField);
+    }
+  }
 
   async function load(id: string, save = false) {
     request.current?.abort();
@@ -165,8 +240,10 @@ export function SavedCard() {
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
+          ref={screen}
           fullscreen
           className="stops-screen card-screen"
+          overlayClassName="card-screen-backdrop"
           showCloseButton={false}
           initialFocus={false}
         >
@@ -177,7 +254,7 @@ export function SavedCard() {
             <DialogTitle>Η κάρτα μου</DialogTitle>
             <CreditCard size={22} className="card-header-icon" />
           </div>
-          <div className="card-screen-body">
+          <div ref={body} className="card-screen-body">
             <DialogDescription className="card-description">
               Το υπόλοιπό σου, πριν την επόμενη διαδρομή.
             </DialogDescription>
@@ -203,20 +280,44 @@ export function SavedCard() {
                   απομένουν.
                 </p>
                 <label htmlFor="bus-card-id">Κωδικός κάρτας</label>
-                <input
-                  id="bus-card-id"
-                  value={input}
-                  onChange={(event) => setInput(event.target.value)}
-                  placeholder="CB + 15 ψηφία"
-                  autoComplete="off"
-                  autoCapitalize="characters"
-                  spellCheck={false}
-                  maxLength={24}
-                  aria-describedby="card-input-hint"
-                />
+                <div ref={field} className="card-input-row">
+                  <input
+                    ref={cardInput}
+                    id="bus-card-id"
+                    value={input}
+                    onChange={(event) => {
+                      setInput(event.target.value);
+                      setPasteMessage('');
+                    }}
+                    onFocus={() => requestAnimationFrame(revealField)}
+                    placeholder="CB + 15 ψηφία"
+                    autoComplete="off"
+                    autoCapitalize="characters"
+                    spellCheck={false}
+                    enterKeyHint="done"
+                    maxLength={24}
+                    aria-describedby="card-input-hint card-paste-message"
+                  />
+                  <button
+                    className="card-paste"
+                    type="button"
+                    onClick={() => void pasteCardId()}
+                    aria-label="Επικόλληση κωδικού κάρτας"
+                    title="Επικόλληση"
+                  >
+                    <ClipboardPaste size={20} />
+                  </button>
+                </div>
                 <small id="card-input-hint">
                   Ο κωδικός CB που αναγράφεται στην κάρτα σου.
                 </small>
+                <output
+                  id="card-paste-message"
+                  htmlFor="bus-card-id"
+                  className="card-paste-message"
+                >
+                  {pasteMessage}
+                </output>
                 <button
                   className="card-primary"
                   disabled={loading}
